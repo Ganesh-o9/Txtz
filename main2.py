@@ -400,112 +400,112 @@ async def ziptxt_handler(bot: Client, m: Message):
     await input6.delete(True)
     await editable.delete()
 
-  thumb = raw_text6
-  if thumb.startswith("http://") or thumb.startswith("https://"):
-    getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
-    thumb = "thumb.jpg"
-  else:
-    thumb = "no"
+    thumb = raw_text6
+    if thumb.startswith("http://") or thumb.startswith("https://"):
+      getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
+      thumb = "thumb.jpg"
+    else:
+      thumb = "no"
 
-  count = int(raw_text) if len(links) > 1 else 1
+    count = int(raw_text) if len(links) > 1 else 1
   
-  try:
-    message = await bot.send_message(sudo_groups, f"❇️ {b_name}")
-    await message.pin()
+    try:
+      message = await bot.send_message(sudo_groups, f"❇️ {b_name}")
+      await message.pin()
     
-    for i in range(count - 1, len(links)):
-      V = links[i][1].replace("file/d/", "uc?export=download&id=").replace("www.youtube-nocookie.com/embed", "youtu.be").replace("?modestbranding=1", "").replace("/view?usp=sharing", "")
-      url = "https://" + V
+      for i in range(count - 1, len(links)):
+        V = links[i][1].replace("file/d/", "uc?export=download&id=").replace("www.youtube-nocookie.com/embed", "youtu.be").replace("?modestbranding=1", "").replace("/view?usp=sharing", "")
+        url = "https://" + V
 
-      if "visionias" in url:
-        async with ClientSession() as session:
-          async with session.get(url, headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,×/×;q=0.8,application/signed-exchange;v=b3;q=0.9', 'Accept-Language': 'en-US,en;q=0.9', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Referer': 'http://www.visionias.in/', 'Sec-Fetch-Dest': 'iframe', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'cross-site', 'Upgrade-Insecure-Requests': '1', 'User-Agent': 'Mozilla/5.0 (Linux; Android 12; RMX2121) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36', 'sec-ch-ua': '"Chromium";v="107", "Not=A?Brand";v="24"', 'sec-ch-ua-mobile': '?1', 'sec-ch-ua-platform': '"Android"',}) as resp:
-            text = await resp.text()
-            url = re.search(r"(https://.×?playlist.m3u8.×?)\"", text).group(1)
+        if "visionias" in url:
+          async with ClientSession() as session:
+            async with session.get(url, headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,×/×;q=0.8,application/signed-exchange;v=b3;q=0.9', 'Accept-Language': 'en-US,en;q=0.9', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Referer': 'http://www.visionias.in/', 'Sec-Fetch-Dest': 'iframe', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'cross-site', 'Upgrade-Insecure-Requests': '1', 'User-Agent': 'Mozilla/5.0 (Linux; Android 12; RMX2121) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36', 'sec-ch-ua': '"Chromium";v="107", "Not=A?Brand";v="24"', 'sec-ch-ua-mobile': '?1', 'sec-ch-ua-platform': '"Android"',}) as resp:
+              text = await resp.text()
+              url = re.search(r"(https://.×?playlist.m3u8.×?)\"", text).group(1)
 
-      elif 'videos.classplusapp' in url:
-        url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers={'x-access-token': 'your-access-token'}).json()['url']
+        elif 'videos.classplusapp' in url:
+          url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers={'x-access-token': 'your-access-token'}).json()['url']
 
-      elif '/master.mpd' in url:
-        id = url.split("/")[-2]
-        url = "https://d26g5bnklkwsh4.cloudfront.net/" + id + "/master.m3u8"
+        elif '/master.mpd' in url:
+          id = url.split("/")[-2]
+          url = "https://d26g5bnklkwsh4.cloudfront.net/" + id + "/master.m3u8"
 
-      name1 = links[i][0].replace("\t", "").replace(":", "").replace("/", "").replace("+", "").replace("#", "").replace("|", "").replace("@", "").replace("×", "").replace(".", "").replace("https", "").replace("http", "").strip()
-      name = f'{str(count).zfill(3)}) {name1[:60]}'
+        name1 = links[i][0].replace("\t", "").replace(":", "").replace("/", "").replace("+", "").replace("#", "").replace("|", "").replace("@", "").replace("×", "").replace(".", "").replace("https", "").replace("http", "").strip()
+        name = f'{str(count).zfill(3)}) {name1[:60]}'
 
 
-                    if url.endswith(".pdf"):
-               try:
-                    cc1 = f'* {str(count).zfill(3)}.* {name1}.pdf \n*Batch »* {b_name}\n\n{creditx}'
-                    cmd = f'aria2c -o "{name}.pdf" "{url}"'
-                    os.system(cmd)
-                    copy = await bot.send_document(chat_id=m.chat.id, document=f'{name}.pdf', caption=cc1)
-                    count += 1
-                    os.remove(f'{name}.pdf')
-                    time.sleep(5)
-               except FloodWait as e:
-                   await m.reply_text(str(e))
-                   time.sleep(e.x)
-                   continue
-               except Exception as e:
-                  await m.reply_text(
-                      f"*Downloading Interrupted *\n{str(e)}\n*Name* » {name}\n*Link* » {url}"
-                  )
-                  continue
-
-            elif url.endswith(".zip"):
-                 if "youtu" in url:
-                    ytf = f"b[height<={raw_text2}][ext=mp4]/bv[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[ext=mp4]"
-                 else:
-                    ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
-                 if "jw-prod" in url:
-                    cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
-                 else:
-                    cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
-                 try:  
-                    cc = f'* {str(count).zfill(3)}.* {name1} {res}.mkv\n*Batch »* {b_name}\n\n{creditx}'
-                    Show = f"*⥥ Downloading »*\n\n*Name »* {name}\nQuality » {raw_text2}\n\n*Url »* {url}"
-                    prog = await m.reply_text(Show)
-                    res_file = await helper.download_video(url, cmd, name)
-                    filename = res_file
-                    await prog.delete(True)
-                    await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
-                    count += 1
-                    time.sleep(20)
-                 except Exception as e:
-                     await m.reply_text(
-                        f"*Downloading Interrupted *\n{str(e)}\n*Name* » {name}\n*Link* » {url}"
-                     )
+                      if url.endswith(".pdf"):
+                 try:
+                      cc1 = f'* {str(count).zfill(3)}.* {name1}.pdf \n*Batch »* {b_name}\n\n{creditx}'
+                      cmd = f'aria2c -o "{name}.pdf" "{url}"'
+                      os.system(cmd)
+                      copy = await bot.send_document(chat_id=m.chat.id, document=f'{name}.pdf', caption=cc1)
+                      count += 1
+                      os.remove(f'{name}.pdf')
+                      time.sleep(5)
+                 except FloodWait as e:
+                     await m.reply_text(str(e))
+                     time.sleep(e.x)
                      continue
-            else:
-                 if "youtu" in url:
-                    ytf = f"b[height<={raw_text2}][ext=mp4]/bv[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[ext=mp4]"
-                 else:
-                    ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
-                 if "jw-prod" in url:
-                    cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
-                 else:
-                    cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
-
-
-                 try:  
-                    cc = f'* {str(count).zfill(3)}.* {name1} {res}.mkv\n*Batch »* {b_name}\n\n{creditx}'
-                    Show = f"*⥥ Downloading »*\n\n*Name »* {name}\nQuality » {raw_text2}\n\n*Url »* {url}"
-                    prog = await m.reply_text(Show)
-                    res_file = await helper.download_video(url, cmd, name)
-                    filename = res_file
-                    await prog.delete(True)
-                    await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
-                    count += 1
-                    time.sleep(20)
                  except Exception as e:
-                     await m.reply_text(
+                    await m.reply_text(
                         f"*Downloading Interrupted *\n{str(e)}\n*Name* » {name}\n*Link* » {url}"
-                     )
-                     continue
-    except Exception as e:
-        await m.reply_text(e)
-    await m.reply_text("Done ✅")
+                    )
+                    continue
+
+              elif url.endswith(".zip"):
+                   if "youtu" in url:
+                      ytf = f"b[height<={raw_text2}][ext=mp4]/bv[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[ext=mp4]"
+                   else:
+                      ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
+                   if "jw-prod" in url:
+                      cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
+                   else:
+                      cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
+                   try:  
+                      cc = f'* {str(count).zfill(3)}.* {name1} {res}.mkv\n*Batch »* {b_name}\n\n{creditx}'
+                      Show = f"*⥥ Downloading »*\n\n*Name »* {name}\nQuality » {raw_text2}\n\n*Url »* {url}"
+                      prog = await m.reply_text(Show)
+                      res_file = await helper.download_video(url, cmd, name)
+                      filename = res_file
+                      await prog.delete(True)
+                      await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
+                      count += 1
+                      time.sleep(20)
+                   except Exception as e:
+                       await m.reply_text(
+                          f"*Downloading Interrupted *\n{str(e)}\n*Name* » {name}\n*Link* » {url}"
+                       )
+                       continue
+              else:
+                   if "youtu" in url:
+                      ytf = f"b[height<={raw_text2}][ext=mp4]/bv[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[ext=mp4]"
+                   else:
+                      ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
+                   if "jw-prod" in url:
+                      cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
+                   else:
+                      cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
+
+
+                   try:  
+                      cc = f'* {str(count).zfill(3)}.* {name1} {res}.mkv\n*Batch »* {b_name}\n\n{creditx}'
+                      Show = f"*⥥ Downloading »*\n\n*Name »* {name}\nQuality » {raw_text2}\n\n*Url »* {url}"
+                      prog = await m.reply_text(Show)
+                      res_file = await helper.download_video(url, cmd, name)
+                      filename = res_file
+                      await prog.delete(True)
+                      await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
+                      count += 1
+                      time.sleep(20)
+                   except Exception as e:
+                       await m.reply_text(
+                          f"*Downloading Interrupted *\n{str(e)}\n*Name* » {name}\n*Link* » {url}"
+                       )
+                       continue
+      except Exception as e:
+          await m.reply_text(e)
+      await m.reply_text("Done ✅")
     
 
 
