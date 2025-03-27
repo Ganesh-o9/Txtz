@@ -434,7 +434,7 @@ async def ziptxt_handler(bot: Client, m: Message):
         name = f'{str(count).zfill(3)}) {name1[:60]}'
 
 
-                      if url.endswith(".pdf"):
+                       if url.endswith(".pdf"):
                  try:
                       cc1 = f'* {str(count).zfill(3)}.* {name1}.pdf \n*Batch »* {b_name}\n\n{creditx}'
                       cmd = f'aria2c -o "{name}.pdf" "{url}"'
