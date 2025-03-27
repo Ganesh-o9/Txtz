@@ -396,9 +396,9 @@ async def ziptxt_handler(bot: Client, m: Message):
    
     await editable.edit("Now send the **Thumb url**\nEg » ```https://envs.sh/g3G.jpg```\n\nor Send no")
     input6 = await bot.listen(editable.chat.id)
-  raw_text6 = input6.text
-  await input6.delete(True)
-  await editable.delete()
+    raw_text6 = input6.text
+    await input6.delete(True)
+    await editable.delete()
 
   thumb = raw_text6
   if thumb.startswith("http://") or thumb.startswith("https://"):
